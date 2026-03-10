@@ -1,0 +1,26 @@
+# Android Studio e Gradle
+.gradle/
+/build/
+/*/build/
+/local.properties
+/.idea/caches
+/.idea/libraries
+/.idea/modules.xml
+/.idea/workspace.xml
+/.idea/navEditor.xml
+/.idea/assetWizardSettings.xml
+/.idea/deploymentTargetSelector.xml
+/.idea/vcs.xml
+
+# Kotlin
+.kotlin/
+*.iml
+*.class
+
+# Log e Arquivos do Sistema
+*.log
+.DS_Store
+
+# Não subir segredos (opcional, mas bom)
+google-services.json
+local.properties

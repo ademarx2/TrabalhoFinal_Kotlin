@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "451666919963",
+    "firebase_url": "https://trabalho-final-android-2a320-default-rtdb.firebaseio.com",
+    "project_id": "trabalho-final-android-2a320",
+    "storage_bucket": "trabalho-final-android-2a320.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:451666919963:android:628eedde95dee9bd83eebe",
+        "android_client_info": {
+          "package_name": "com.rameda38.trabalhofinal"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "451666919963-pei5htgr24rtf3u7kf3fnt4nvnprojn2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.rameda38.trabalhofinal",
+            "certificate_hash": "da4bac0551a71f365c814249680cfce9ccc9a0fa"
+          }
+        },
+        {
+          "client_id": "451666919963-lqde3np8v9k97tc7ibfpivh881guuo8t.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA1PvYN8XC_MNhTVqfME0opyG29cRJSpOE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "451666919963-lqde3np8v9k97tc7ibfpivh881guuo8t.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,37 @@
+<resources>
+    <string name="app_name">Controle de Despesas</string>
+    <string name="title_login">Login</string>
+    <string name="title_register">Registro</string>
+    <string name="title_home">Minhas Despesas</string>
+    <string name="title_add_expense">Adicionar Despesa</string>
+    <string name="title_edit_expense">Editar Despesa</string>
+
+    <string name="hint_email">E-mail</string>
+    <string name="hint_password">Senha</string>
+    <string name="hint_name">Nome Completo</string>
+    <string name="hint_expense_description">Descrição da Despesa</string>
+    <string name="hint_expense_value">Valor (R$)</string>
+
+    <string name="btn_login">Entrar</string>
+    <string name="btn_register">Registrar</string>
+    <string name="btn_save">Salvar</string>
+    <string name="btn_delete">Excluir</string>
+    <string name="btn_logout">Sair</string>
+    <string name="btn_google_login">Entrar com Google</string>
+    <string name="btn_google_register">Registrar com Google</string>
+
+    <string name="msg_login_success">Login realizado com sucesso!</string>
+    <string name="msg_register_success">Registro realizado com sucesso!</string>
+    <string name="msg_error_fields">Preencha todos os campos!</string>
+    <string name="msg_error_auth">Erro na autenticação. Tente novamente.</string>
+    <string name="msg_error_google">Falha no login com Google.</string>
+    <string name="msg_error_firebase">Falha na autenticação com Firebase.</string>
+    <string name="msg_no_account">Não tem conta? Registre-se</string>
+    <string name="msg_has_account">Já tem conta? Login</string>
+
+    <string name="action_dark_mode">Alternar Tema</string>
+
+    <!-- Firebase e Google -->
+    <string name="firebase_url">https://trabalho-final-android-2a320-default-rtdb.firebaseio.com/</string>
+    <string name="default_web_client_id">451666919963-lqde3np8v9k97tc7ibfpivh881guuo8t.apps.googleusercontent.com</string>
+</resources>
