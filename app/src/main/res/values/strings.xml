@@ -31,6 +31,10 @@
 
     <string name="action_dark_mode">Alternar Tema</string>
 
+    <string name="btn_forgot_password">Esqueci minha senha</string>
+    <string name="msg_reset_email_sent">E-mail de recuperação enviado!</string>
+    <string name="msg_reset_email_error">Falha ao enviar e-mail de recuperação.</string>
+
     <!-- Firebase e Google -->
     <string name="firebase_url">https://trabalho-final-android-2a320-default-rtdb.firebaseio.com/</string>
     <string name="default_web_client_id">451666919963-lqde3np8v9k97tc7ibfpivh881guuo8t.apps.googleusercontent.com</string>

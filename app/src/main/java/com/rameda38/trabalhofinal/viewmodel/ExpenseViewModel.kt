@@ -16,7 +16,7 @@ import kotlinx.coroutines.launch
 class ExpenseViewModel(application: Application) : AndroidViewModel(application) {
 
     private val repository: ExpenseRepository
-    private val database = FirebaseDatabase.getInstance().getReference("expenses")
+    private val database = FirebaseDatabase.getInstance("https://trabalho-final-android-2a320-default-rtdb.firebaseio.com/").getReference("expenses")
 
     init {
         val expenseDao = AppDatabase.getDatabase(application).expenseDao()
@@ -37,29 +37,21 @@ class ExpenseViewModel(application: Application) : AndroidViewModel(application)
                     val firebaseExpenses = mutableListOf<Expense>()
                     for (child in snapshot.children) {
                         try {
-                            
-                            val id = child.child("id").value?.toString() ?: child.key ?: ""
-                            val description = child.child("description").value?.toString() ?: ""
-                            val value = (child.child("value").value as? Number)?.toDouble() ?: 0.0
-                            val userId = child.child("userId").value?.toString() ?: ""
-                            
-                            val expense = Expense(
-                                id = id,
-                                description = description,
-                                value = value,
-                                userId = userId
-                            )
-                            firebaseExpenses.add(expense)
+                            val expense = child.getValue(Expense::class.java)
+                            if (expense != null) {
+                                firebaseExpenses.add(expense)
+                            }
                         } catch (e: Exception) {
-                            e.printStackTrace()
+                            android.util.Log.e("ExpenseViewModel", "Erro ao converter despesa: ${e.message}")
                         }
                     }
-                    
                     repository.syncExpenses(firebaseExpenses)
                 }
             }
 
-            override fun onCancelled(error: DatabaseError) {}
+            override fun onCancelled(error: DatabaseError) {
+                android.util.Log.w("ExpenseViewModel", "Erro ao sincronizar: ${error.message}")
+            }
         })
     }
 

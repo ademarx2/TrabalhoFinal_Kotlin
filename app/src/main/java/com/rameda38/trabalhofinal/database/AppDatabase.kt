@@ -6,7 +6,7 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.rameda38.trabalhofinal.model.Expense
 
-@Database(entities = [Expense::class], version = 2, exportSchema = false)
+@Database(entities = [Expense::class], version = 4, exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun expenseDao(): ExpenseDao
 

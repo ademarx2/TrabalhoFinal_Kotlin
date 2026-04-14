@@ -4,27 +4,24 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.firebase.auth.FirebaseAuth
-import com.rameda38.trabalhofinal.adapter.ExpenseAdapter
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.MobileAds
+import com.rameda38.trabalhofinal.api.AdviceResponse
+import com.rameda38.trabalhofinal.api.AdviceService
 import com.rameda38.trabalhofinal.databinding.ActivityHomeBinding
-import com.rameda38.trabalhofinal.model.Expense
-import com.rameda38.trabalhofinal.viewmodel.ExpenseViewModel
-import java.io.IOException
-import java.io.InputStream
-import java.nio.charset.Charset
-
-import androidx.appcompat.app.AppCompatDelegate
-
-import android.util.Log
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 
 class HomeActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityHomeBinding
-    private lateinit var viewModel: ExpenseViewModel
     private lateinit var auth: FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -32,68 +29,44 @@ class HomeActivity : AppCompatActivity() {
         binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        
+        auth = FirebaseAuth.getInstance()
         setSupportActionBar(binding.toolbar)
 
-        auth = FirebaseAuth.getInstance()
-        viewModel = ViewModelProvider(this).get(ExpenseViewModel::class.java)
+        // Inicializar AdMob
+        MobileAds.initialize(this) {}
+        val adRequest = AdRequest.Builder().build()
+        binding.adView.loadAd(adRequest)
 
-        
         val sharedPref = getSharedPreferences("user_prefs", MODE_PRIVATE)
         val userName = sharedPref.getString("user_name", "Usuário")
-        binding.toolbar.title = "Olá, $userName"
-
+        binding.tvFinancialTip.text = "Olá, $userName! Carregando dica..."
         
         loadFinancialTip()
-        showAppInfoFromRaw()
-
-        val adapter = ExpenseAdapter { expense ->
-            
-            val intent = Intent(this, EditActivity::class.java)
-            intent.putExtra("EXPENSE", expense)
-            startActivity(intent)
-        }
-
-        binding.rvExpenses.layoutManager = LinearLayoutManager(this)
-        binding.rvExpenses.adapter = adapter
-
-        
-        val userId = auth.currentUser?.uid ?: ""
-        viewModel.getAllExpenses(userId).observe(this) { expenses ->
-            
-            adapter.submitList(expenses)
-        }
 
         binding.fabAdd.setOnClickListener {
-            startActivity(Intent(this, EditActivity::class.java))
+            val intent = Intent(this, EditActivity::class.java)
+            startActivity(intent)
         }
     }
 
-    
-    private fun showAppInfoFromRaw() {
-        try {
-            val inputStream: InputStream = resources.openRawResource(R.raw.app_info)
-            val info = inputStream.bufferedReader().use { it.readText() }
-            Toast.makeText(this, info, Toast.LENGTH_SHORT).show()
-        } catch (e: Exception) {
-            Log.e("HomeActivity", "Erro ao ler Raw", e)
-        }
-    }
-
-    
     private fun loadFinancialTip() {
-        try {
-            val inputStream: InputStream = assets.open("financial_tip.txt")
-            val size: Int = inputStream.available()
-            val buffer = ByteArray(size)
-            inputStream.read(buffer)
-            inputStream.close()
-            val tip = String(buffer, Charset.forName("UTF-8"))
-            binding.tvFinancialTip.text = tip
-        } catch (e: IOException) {
-            Log.e("HomeActivity", "Erro ao ler Assets", e)
-            binding.cardTip.visibility = android.view.View.GONE
-        }
+        val retrofit = Retrofit.Builder()
+            .baseUrl("https://api.adviceslip.com/")
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+
+        val service = retrofit.create(AdviceService::class.java)
+        service.getRandomAdvice().enqueue(object : Callback<AdviceResponse> {
+            override fun onResponse(call: Call<AdviceResponse>, response: Response<AdviceResponse>) {
+                if (response.isSuccessful) {
+                    binding.tvFinancialTip.text = response.body()?.slip?.advice
+                }
+            }
+
+            override fun onFailure(call: Call<AdviceResponse>, t: Throwable) {
+                binding.tvFinancialTip.text = "Economize sempre que possível!"
+            }
+        })
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -102,26 +75,22 @@ class HomeActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.action_theme -> {
-                val currentMode = AppCompatDelegate.getDefaultNightMode()
-                if (currentMode == AppCompatDelegate.MODE_NIGHT_YES) {
-                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-                } else {
-                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-                }
-                return true
-            }
+        return when (item.itemId) {
             R.id.action_logout -> {
-                auth.signOut()
-                
-                val intent = Intent(this, LoginActivity::class.java)
-                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                startActivity(intent)
-                finish()
-                return true
+                logout()
+                true
             }
+            else -> super.onOptionsItemSelected(item)
         }
-        return super.onOptionsItemSelected(item)
+    }
+
+    private fun logout() {
+        auth.signOut()
+        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).build()
+        GoogleSignIn.getClient(this, gso).signOut()
+        
+        val intent = Intent(this, LoginActivity::class.java)
+        startActivity(intent)
+        finish()
     }
 }

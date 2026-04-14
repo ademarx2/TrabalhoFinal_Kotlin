@@ -7,8 +7,12 @@ import java.io.Serializable
 @Entity(tableName = "expenses")
 data class Expense(
     @PrimaryKey
-    val id: String = "", 
+    val id: String = "",
     val description: String = "",
     val value: Double = 0.0,
-    val userId: String = ""
+    val userId: String = "",
+    val imageUrl: String? = null,
+    val latitude: Double? = null,
+    val longitude: Double? = null,
+    val timestamp: Long = System.currentTimeMillis()
 ) : Serializable
